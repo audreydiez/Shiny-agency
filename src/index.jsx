@@ -10,10 +10,18 @@ import reportWebVitals from './reportWebVitals'
 import Error from './components/Error'
 import Results from './Pages/Results/Results'
 import Freelances from './Pages/Freelances/Freelances'
+import { createGlobalStyle } from 'styled-components'
+
+const GlobalStyle = createGlobalStyle`
+    div {
+        font-family: 'Trebuchet MS', Helvetica, sans-serif;
+    }
+`
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
+      <GlobalStyle />
       <Header />
       <Switch>
         <Route exact path="/">
