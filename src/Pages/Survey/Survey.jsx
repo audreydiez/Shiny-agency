@@ -1,8 +1,10 @@
-import { Link, useParams } from 'react-router-dom'
+import { useState, useEffect, useContext } from 'react'
+import { useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { useState, useEffect } from 'react'
 import colors from '../../utils/style/colors'
 import { Loader } from '../../utils/style/Atoms'
+import { SurveyContext } from '../../utils/context'
 
 const SurveyContainer = styled.div`
   display: flex;
@@ -15,7 +17,7 @@ const QuestionTitle = styled.h2`
   text-decoration-color: ${colors.primary};
 `
 
-const QuestionContent = styled.div`
+const QuestionContent = styled.span`
   margin: 30px;
 `
 
@@ -29,16 +31,44 @@ const LinkWrapper = styled.div`
   }
 `
 
+const ReplyBox = styled.button`
+  border: none;
+  height: 100px;
+  width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${colors.backgroundLight};
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: ${(props) =>
+    props.isSelected ? `0px 0px 0px 2px ${colors.primary} inset` : 'none'};
+  &:first-child {
+    margin-right: 15px;
+  }
+  &:last-of-type {
+    margin-left: 15px;
+  }
+`
+
+const ReplyWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
 function Survey() {
   const { questionNumber } = useParams()
   const questionNumberInt = parseInt(questionNumber)
   const prevQuestionNumber = questionNumberInt === 1 ? 1 : questionNumberInt - 1
   const nextQuestionNumber = questionNumberInt + 1
-
-  // States
   const [surveyData, setSurveyData] = useState({})
   const [isDataLoading, setDataLoading] = useState(false)
+  const { answers, saveAnswers } = useContext(SurveyContext)
   const [error, setError] = useState(false)
+
+  function saveReply(answer) {
+    saveAnswers({ [questionNumber]: answer })
+  }
 
   useEffect(() => {
     async function fetchSurvey() {
@@ -48,6 +78,7 @@ function Survey() {
         const { surveyData } = await response.json()
         setSurveyData(surveyData)
       } catch (err) {
+        console.log(err)
         setError(true)
       } finally {
         setDataLoading(false)
@@ -68,12 +99,28 @@ function Survey() {
       ) : (
         <QuestionContent>{surveyData[questionNumber]}</QuestionContent>
       )}
+      {answers && (
+        <ReplyWrapper>
+          <ReplyBox
+            onClick={() => saveReply(true)}
+            isSelected={answers[questionNumber] === true}
+          >
+            Oui
+          </ReplyBox>
+          <ReplyBox
+            onClick={() => saveReply(false)}
+            isSelected={answers[questionNumber] === false}
+          >
+            Non
+          </ReplyBox>
+        </ReplyWrapper>
+      )}
       <LinkWrapper>
         <Link to={`/survey/${prevQuestionNumber}`}>Précédent</Link>
-        {questionNumberInt === 6 ? (
-          <Link to="/results">Résultats</Link>
-        ) : (
+        {surveyData[questionNumberInt + 1] ? (
           <Link to={`/survey/${nextQuestionNumber}`}>Suivant</Link>
+        ) : (
+          <Link to="/results">Résultats</Link>
         )}
       </LinkWrapper>
     </SurveyContainer>
