@@ -10,6 +10,7 @@ import reportWebVitals from './reportWebVitals'
 import Error from './components/Error'
 import Results from './Pages/Results/index'
 import Freelances from './Pages/Freelances/index'
+import Profile from './Pages/Profile/index'
 import { SurveyProvider, ThemeProvider } from './utils/context'
 import Footer from './components/Footer'
 import GlobalStyle from './utils/style/GlobalStyle'
@@ -34,6 +35,10 @@ ReactDOM.render(
             <Route path="/freelances">
               <Freelances />
             </Route>
+            <Route
+              path="/profile/:id"
+              render={(props) => <Profile {...props} />}
+            />
             <Route>
               <Error />
             </Route>
