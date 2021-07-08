@@ -35,7 +35,7 @@ const LoaderWrapper = styled.div`
   text-align: center;
 `
 
-function Freelances() {
+function Index() {
   const { theme } = useTheme()
   const { data, isLoading, error } = useFetch(
     `http://localhost:8000/freelances`
@@ -58,7 +58,7 @@ function Freelances() {
       </PageSubtitle>
       {isLoading ? (
         <LoaderWrapper>
-          <Loader theme={theme} />
+          <Loader theme={theme} data-testid="loader" />
         </LoaderWrapper>
       ) : (
         <CardsContainer>
@@ -76,4 +76,4 @@ function Freelances() {
   )
 }
 
-export default Freelances
+export default Index

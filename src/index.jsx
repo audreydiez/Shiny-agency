@@ -8,8 +8,8 @@ import Survey from './Pages/Survey/Survey'
 import Header from './components/Header'
 import reportWebVitals from './reportWebVitals'
 import Error from './components/Error'
-import Index from './Pages/Results/index'
-import Freelances from './Pages/Freelances/Freelances'
+import Results from './Pages/Results/index'
+import Freelances from './Pages/Freelances/index'
 import { SurveyProvider, ThemeProvider } from './utils/context'
 import Footer from './components/Footer'
 import GlobalStyle from './utils/style/GlobalStyle'
@@ -29,7 +29,7 @@ ReactDOM.render(
               <Survey />
             </Route>
             <Route path="/results">
-              <Index />
+              <Results />
             </Route>
             <Route path="/freelances">
               <Freelances />
