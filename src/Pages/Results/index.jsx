@@ -1,6 +1,7 @@
 import { useContext } from 'react'
-import { SurveyContext } from '../../utils/context'
 import styled from 'styled-components'
+import { SurveyContext } from '../../utils/context'
+import EmptyList from '../../components/EmptyList'
 import colors from '../../utils/style/colors'
 import { useFetch, useTheme } from '../../utils/hooks'
 import { StyledLink, Loader } from '../../utils/style/Atoms'
@@ -52,13 +53,6 @@ const LoaderWrapper = styled.div`
   justify-content: center;
 `
 
-export function formatJobList(title, listLength, index) {
-  if (index === listLength - 1) {
-    return title
-  }
-  return `${title},`
-}
-
 export function formatQueryParams(answers) {
   const answerNumbers = Object.keys(answers)
 
@@ -69,17 +63,15 @@ export function formatQueryParams(answers) {
   }, '')
 }
 
-function formatFetchParams(answers) {
-  const answerNumbers = Object.keys(answers)
-
-  return answerNumbers.reduce((previousParams, answerNumber, index) => {
-    const isFirstParam = index === 0
-    const separator = isFirstParam ? '' : '&'
-    return `${previousParams}${separator}a${answerNumber}=${answers[answerNumber]}`
-  }, '')
+export function formatJobList(title, listLength, index) {
+  if (index === listLength - 1) {
+    return title
+  } else {
+    return `${title},`
+  }
 }
 
-function Index() {
+function Results() {
   const { theme } = useTheme()
   const { answers } = useContext(SurveyContext)
   const queryParams = formatQueryParams(answers)
@@ -93,6 +85,10 @@ function Index() {
   }
 
   const resultsData = data?.resultsData
+
+  if (resultsData?.length < 1) {
+    return <EmptyList theme={theme} />
+  }
 
   return isLoading ? (
     <LoaderWrapper>
@@ -122,7 +118,7 @@ function Index() {
               theme={theme}
               key={`result-detail-${index}-${result.title}`}
             >
-              <JobTitle data-testid="job-title" theme={theme}>
+              <JobTitle theme={theme} data-testid="job-title">
                 {result.title}
               </JobTitle>
               <p data-testid="job-description">{result.description}</p>
@@ -133,4 +129,4 @@ function Index() {
   )
 }
 
-export default Index
+export default Results
